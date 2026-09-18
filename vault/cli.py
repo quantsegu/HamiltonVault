@@ -24,6 +24,12 @@ def main():
             p.add_argument('--result-file')
         if action in ('run', 'build'):
             p.add_argument('--load-dts', required=True)
+    p = commands.add_parser('build-warehouse')
+    p.add_argument('model')
+    p.add_argument('--warehouse', required=True)
+    p.add_argument('--output', required=True)
+    p = commands.add_parser('run-warehouse')
+    p.add_argument('project')
     p = commands.add_parser('schema')
     p.add_argument('--version', choices=['1', '2'], default='2')
     p.add_argument('--output', required=True)
@@ -36,6 +42,15 @@ def main():
     p.add_argument('--output', required=True)
     args = parser.parse_args()
     try:
+        if args.command == 'build-warehouse':
+            from .warehouse_vault import compile_project
+            result = compile_project(args.model, args.warehouse, args.output)
+            print(json.dumps({'status': 'compiled', 'engine': result['warehouse']['type'], 'output': args.output}))
+            return
+        if args.command == 'run-warehouse':
+            from .warehouse_vault import run
+            print(json.dumps(run(args.project), indent=2))
+            return
         if args.command == 'schema':
             spec = Project if args.version == '2' else Model
             Path(args.output).write_text(json.dumps(spec.model_json_schema(), indent=2))

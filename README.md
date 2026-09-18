@@ -199,3 +199,7 @@ is no Snowflake/Databricks backend, scheduler, CDC connector, or cloud deploymen
 
 `requirements-tested.txt` records the local validation environment. The package's
 `pyproject.toml` declares supported dependency ranges.
+
+## Warehouse adapters
+
+See [WAREHOUSES.md](WAREHOUSES.md) for Databricks, Snowflake, and ClickHouse configuration, target placement, offline validation, and execution limitations.
